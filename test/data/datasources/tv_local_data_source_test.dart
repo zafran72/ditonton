@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
-import 'package:ditonton/common/exception.dart';
-import 'package:ditonton/data/datasources/tv_local_data_source.dart';
+import '../../../core/lib/utils/exception.dart';
+import 'package:core/data/datasources/tv_local_data_source.dart';
 
 import '../../dummy_data/dummy_objects.dart';
 import '../../helpers/test_helper.mocks.dart';

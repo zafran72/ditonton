@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
-import 'package:ditonton/common/state_enum.dart';
-import 'package:ditonton/domain/entities/tv.dart';
-import 'package:ditonton/presentation/pages/tv_detail_page.dart';
-import 'package:ditonton/presentation/provider/tv_detail_notifier.dart';
+import '../../../core/lib/utils/state_enum.dart';
+import 'package:core/domain/entities/tv.dart';
+import 'package:core/presentation/pages/tv_detail_page.dart';
+import 'package:core/presentation/provider/tv_detail_notifier.dart';
 import 'package:provider/provider.dart';
 
 import '../../dummy_data/dummy_objects.dart';

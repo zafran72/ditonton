@@ -7,12 +7,12 @@ import 'dart:async' as _i5;
 
 import 'package:dartz/dartz.dart' as _i3;
 import 'package:mockito/mockito.dart' as _i1;
-import 'package:ditonton/common/failure.dart' as _i6;
-import 'package:ditonton/domain/entities/tv.dart' as _i7;
-import 'package:ditonton/domain/repositories/tv_repository.dart' as _i2;
-import 'package:ditonton/domain/usecases/get_now_playing_tv.dart' as _i4;
-import 'package:ditonton/domain/usecases/get_popular_tv.dart' as _i8;
-import 'package:ditonton/domain/usecases/get_top_rated_tv.dart' as _i9;
+import '../../../core/lib/utils/failure.dart' as _i6;
+import 'package:core/domain/entities/tv.dart' as _i7;
+import 'package:core/domain/repositories/tv_repository.dart' as _i2;
+import 'package:core/domain/usecases/get_now_playing_tv.dart' as _i4;
+import 'package:core/domain/usecases/get_popular_tv.dart' as _i8;
+import 'package:core/domain/usecases/get_top_rated_tv.dart' as _i9;
 
 // ignore_for_file: type=lint
 // ignore_for_file: avoid_redundant_argument_values
