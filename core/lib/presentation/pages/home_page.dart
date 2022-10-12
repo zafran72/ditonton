@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:core/core.dart';
-import 'package:core/presentation/pages/movie_page.dart';
-import 'package:core/presentation/pages/tv_page.dart';
+import 'package:movie/presentation/pages/movie_page.dart';
+import 'package:tv/presentation/pages/tv_page.dart';
 
 class HomePage extends StatefulWidget {
   static const routeName = '/home_page';
