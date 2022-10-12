@@ -1,3 +1,5 @@
+// ignore_for_file: constant_identifier_names
+
 import 'package:core/core.dart';
 import 'package:core/presentation/provider/movie_search_notifier.dart';
 import 'package:core/presentation/widgets/movie_card_list.dart';
@@ -7,11 +9,13 @@ import 'package:provider/provider.dart';
 class SearchPage extends StatelessWidget {
   static const ROUTE_NAME = '/search';
 
+  const SearchPage({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Search Movie'),
+        title: const Text('Search Movie'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -23,14 +27,14 @@ class SearchPage extends StatelessWidget {
                 Provider.of<MovieSearchNotifier>(context, listen: false)
                     .fetchMovieSearch(query);
               },
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 hintText: 'Search title',
                 prefixIcon: Icon(Icons.search),
                 border: OutlineInputBorder(),
               ),
               textInputAction: TextInputAction.search,
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             Text(
               'Search Result',
               style: kHeading6,
@@ -38,7 +42,7 @@ class SearchPage extends StatelessWidget {
             Consumer<MovieSearchNotifier>(
               builder: (context, data, child) {
                 if (data.state == RequestState.Loading) {
-                  return Center(
+                  return const Center(
                     child: CircularProgressIndicator(),
                   );
                 } else if (data.state == RequestState.Loaded) {

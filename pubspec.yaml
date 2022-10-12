@@ -24,9 +24,6 @@ dependencies:
   flutter:
     sdk: flutter
 
-  about:
-    path: about
-
   core:
     path: core
 

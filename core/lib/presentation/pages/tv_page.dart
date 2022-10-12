@@ -1,8 +1,10 @@
+// ignore_for_file: library_private_types_in_public_api
+
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:core/presentation/pages/about_page.dart';
 import 'package:flutter/material.dart';
 import 'package:core/domain/entities/tv.dart';
 import 'package:core/core.dart';
-import 'package:about/about.dart';
 import 'package:core/presentation/pages/popular_tv_page.dart';
 import 'package:core/presentation/pages/top_rated_tv_page.dart';
 import 'package:core/presentation/pages/tv_detail_page.dart';
@@ -12,6 +14,8 @@ import 'package:core/presentation/provider/tv_list_notifier.dart';
 import 'package:provider/provider.dart';
 
 class TvPage extends StatefulWidget {
+  const TvPage({super.key});
+
   @override
   _TvPageState createState() => _TvPageState();
 }
@@ -32,7 +36,7 @@ class _TvPageState extends State<TvPage> {
       drawer: Drawer(
         child: Column(
           children: [
-            UserAccountsDrawerHeader(
+            const UserAccountsDrawerHeader(
               currentAccountPicture: CircleAvatar(
                 backgroundImage: AssetImage('assets/circle-g.png'),
               ),
@@ -40,15 +44,15 @@ class _TvPageState extends State<TvPage> {
               accountEmail: Text('ditonton@dicoding.com'),
             ),
             ListTile(
-              leading: Icon(Icons.live_tv),
-              title: Text('TV Series'),
+              leading: const Icon(Icons.live_tv),
+              title: const Text('TV Series'),
               onTap: () {
                 Navigator.pop(context);
               },
             ),
             ListTile(
-              leading: Icon(Icons.save_alt),
-              title: Text('Watchlist'),
+              leading: const Icon(Icons.save_alt),
+              title: const Text('Watchlist'),
               onTap: () {
                 Navigator.pushNamed(context, WatchlistTvPage.routeName);
               },
@@ -57,20 +61,20 @@ class _TvPageState extends State<TvPage> {
               onTap: () {
                 Navigator.pushNamed(context, AboutPage.ROUTE_NAME);
               },
-              leading: Icon(Icons.info_outline),
-              title: Text('About'),
+              leading: const Icon(Icons.info_outline),
+              title: const Text('About'),
             ),
           ],
         ),
       ),
       appBar: AppBar(
-        title: Text('TV Series'),
+        title: const Text('TV Series'),
         actions: [
           IconButton(
             onPressed: () {
               Navigator.pushNamed(context, TvSearchPage.ROUTE_NAME);
             },
-            icon: Icon(Icons.search),
+            icon: const Icon(Icons.search),
           )
         ],
       ),
@@ -87,13 +91,13 @@ class _TvPageState extends State<TvPage> {
               Consumer<TvListNotifier>(builder: (context, data, child) {
                 final state = data.nowPlayingState;
                 if (state == RequestState.Loading) {
-                  return Center(
+                  return const Center(
                     child: CircularProgressIndicator(),
                   );
                 } else if (state == RequestState.Loaded) {
                   return TvList(data.nowPlayingTv);
                 } else {
-                  return Text('Failed');
+                  return const Text('Failed');
                 }
               }),
               _buildSubHeading(
@@ -104,13 +108,13 @@ class _TvPageState extends State<TvPage> {
               Consumer<TvListNotifier>(builder: (context, data, child) {
                 final state = data.popularTvState;
                 if (state == RequestState.Loading) {
-                  return Center(
+                  return const Center(
                     child: CircularProgressIndicator(),
                   );
                 } else if (state == RequestState.Loaded) {
                   return TvList(data.popularTv);
                 } else {
-                  return Text('Failed');
+                  return const Text('Failed');
                 }
               }),
               _buildSubHeading(
@@ -121,13 +125,13 @@ class _TvPageState extends State<TvPage> {
               Consumer<TvListNotifier>(builder: (context, data, child) {
                 final state = data.topRatedTvState;
                 if (state == RequestState.Loading) {
-                  return Center(
+                  return const Center(
                     child: CircularProgressIndicator(),
                   );
                 } else if (state == RequestState.Loaded) {
                   return TvList(data.topRatedTv);
                 } else {
-                  return Text('Failed');
+                  return const Text('Failed');
                 }
               })
             ],
@@ -151,7 +155,7 @@ Widget _buildSubHeading({required String title, required Function() onTap}) {
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Row(
-            children: [Text('See more'), Icon(Icons.arrow_forward)],
+            children: const [Text('See more'), Icon(Icons.arrow_forward)],
           ),
         ),
       ),
@@ -162,11 +166,11 @@ Widget _buildSubHeading({required String title, required Function() onTap}) {
 class TvList extends StatelessWidget {
   final List<Tv> tv;
 
-  TvList(this.tv);
+  const TvList(this.tv, {super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       height: 200,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
@@ -183,13 +187,13 @@ class TvList extends StatelessWidget {
                 );
               },
               child: ClipRRect(
-                borderRadius: BorderRadius.all(Radius.circular(16)),
+                borderRadius: const BorderRadius.all(Radius.circular(16)),
                 child: CachedNetworkImage(
                   imageUrl: '$BASE_IMAGE_URL${tv1.posterPath}',
-                  placeholder: (context, url) => Center(
+                  placeholder: (context, url) => const Center(
                     child: CircularProgressIndicator(),
                   ),
-                  errorWidget: (context, url, error) => Icon(Icons.error),
+                  errorWidget: (context, url, error) => const Icon(Icons.error),
                 ),
               ),
             ),

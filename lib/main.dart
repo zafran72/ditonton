@@ -1,5 +1,5 @@
 import 'package:core/core.dart';
-import 'package:about/about.dart';
+import 'package:core/presentation/pages/about_page.dart';
 import 'package:core/presentation/pages/home_page.dart';
 import 'package:core/presentation/pages/movie_detail_page.dart';
 import 'package:core/presentation/pages/popular_movies_page.dart';
