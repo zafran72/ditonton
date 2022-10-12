@@ -18,11 +18,11 @@ void main() {
   test('should remove watchlist tv from repository', () async {
     // arrange
     when(mockTvRepository.tvRemoveWatchlist(testTvDetail))
-        .thenAnswer((_) async => Right('Removed from watchlist'));
+        .thenAnswer((_) async => const Right('Removed from watchlist'));
     // act
     final result = await usecase.execute(testTvDetail);
     // assert
     verify(mockTvRepository.tvRemoveWatchlist(testTvDetail));
-    expect(result, Right('Removed from watchlist'));
+    expect(result, const Right('Removed from watchlist'));
   });
 }

@@ -49,15 +49,15 @@ void main() {
       });
   });
 
-  final tId = 1;
+  const tId = 1;
 
   final tTv = Tv(
     backdropPath: 'backdropPath',
     firstAirDate: 'firstAirDate',
-    genreIds: [1, 2, 3],
+    genreIds: const [1, 2, 3],
     id: 1,
     name: 'name',
-    originCountry: ['US'],
+    originCountry: const ['US'],
     originalLanguage: 'originalLanguage',
     originalName: 'originalName',
     overview: 'overview',
@@ -69,9 +69,9 @@ void main() {
 
   final tTvs = <Tv>[tTv];
 
-  void _arrangeUsecase() {
+  void arrangeUsecase() {
     when(mockGetTvDetail.execute(tId))
-        .thenAnswer((_) async => Right(testTvDetail));
+        .thenAnswer((_) async => const Right(testTvDetail));
     when(mockGetTvRecommendations.execute(tId))
         .thenAnswer((_) async => Right(tTvs));
   }
@@ -79,7 +79,7 @@ void main() {
   group('Get Tv Detail', () {
     test('should get data from the usecase', () async {
       //arrange
-      _arrangeUsecase();
+      arrangeUsecase();
       //act
       await provider.fetchTvDetail(tId);
       //assert
@@ -89,7 +89,7 @@ void main() {
 
     test('should change state to Loading when usecase is called', () {
       // arrange
-      _arrangeUsecase();
+      arrangeUsecase();
       // act
       provider.fetchTvDetail(tId);
       // assert
@@ -99,7 +99,7 @@ void main() {
 
     test('should change tv when data is gotten successfully', () async {
       // arrange
-      _arrangeUsecase();
+      arrangeUsecase();
       // act
       await provider.fetchTvDetail(tId);
       // assert
@@ -111,7 +111,7 @@ void main() {
     test('should change recommendation tvs when data is gotten successfully',
         () async {
       // arrange
-      _arrangeUsecase();
+      arrangeUsecase();
       // act
       await provider.fetchTvDetail(tId);
       // assert
@@ -123,7 +123,7 @@ void main() {
   group('Get Tv Recommendations', () {
     test('should get data from the usecase', () async {
       // arrange
-      _arrangeUsecase();
+      arrangeUsecase();
       // act
       await provider.fetchTvDetail(tId);
       // assert
@@ -134,7 +134,7 @@ void main() {
     test('should update recommendation state when data is gotten successfully',
         () async {
       // arrange
-      _arrangeUsecase();
+      arrangeUsecase();
       // act
       await provider.fetchTvDetail(tId);
       // assert
@@ -145,9 +145,9 @@ void main() {
     test('should update error message when request in successful', () async {
       // arrange
       when(mockGetTvDetail.execute(tId))
-          .thenAnswer((_) async => Right(testTvDetail));
+          .thenAnswer((_) async => const Right(testTvDetail));
       when(mockGetTvRecommendations.execute(tId))
-          .thenAnswer((_) async => Left(ServerFailure('Failed')));
+          .thenAnswer((_) async => const Left(ServerFailure('Failed')));
       // act
       await provider.fetchTvDetail(tId);
       // assert
@@ -169,7 +169,7 @@ void main() {
     test('should execute save watchlist when function called', () async {
       // arrange
       when(mockTvSaveWatchlist.execute(testTvDetail))
-          .thenAnswer((_) async => Right('Success'));
+          .thenAnswer((_) async => const Right('Success'));
       when(mockGetWatchlistTvStatus.execute(testTvDetail.id))
           .thenAnswer((_) async => true);
       // act
@@ -181,7 +181,7 @@ void main() {
     test('should execute remove watchlist when function called', () async {
       // arrange
       when(mockTvRemoveWatchlist.execute(testTvDetail))
-          .thenAnswer((_) async => Right('Removed'));
+          .thenAnswer((_) async => const Right('Removed'));
       when(mockGetWatchlistTvStatus.execute(testTvDetail.id))
           .thenAnswer((_) async => false);
       // act
@@ -193,7 +193,7 @@ void main() {
     test('should update watchlist status when add watchlist success', () async {
       // arrange
       when(mockTvSaveWatchlist.execute(testTvDetail))
-          .thenAnswer((_) async => Right('Added to Watchlist'));
+          .thenAnswer((_) async => const Right('Added to Watchlist'));
       when(mockGetWatchlistTvStatus.execute(testTvDetail.id))
           .thenAnswer((_) async => true);
       // act
@@ -208,7 +208,7 @@ void main() {
     test('should update watchlist message when add watchlist failed', () async {
       // arrange
       when(mockTvSaveWatchlist.execute(testTvDetail))
-          .thenAnswer((_) async => Left(DatabaseFailure('Failed')));
+          .thenAnswer((_) async => const Left(DatabaseFailure('Failed')));
       when(mockGetWatchlistTvStatus.execute(testTvDetail.id))
           .thenAnswer((_) async => false);
       // act
@@ -223,7 +223,7 @@ void main() {
     test('should return error when data is unsuccessful', () async {
       // arrange
       when(mockGetTvDetail.execute(tId))
-          .thenAnswer((_) async => Left(ServerFailure('Server Failure')));
+          .thenAnswer((_) async => const Left(ServerFailure('Server Failure')));
       when(mockGetTvRecommendations.execute(tId))
           .thenAnswer((_) async => Right(tTvs));
       // act

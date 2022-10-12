@@ -7,10 +7,10 @@ import 'package:tv/domain/entities/tv_detail.dart';
 final testTv = Tv(
   backdropPath: '/etj8E2o0Bud0HkONVQPjyCkIvpv.jpg',
   firstAirDate: '2022-08-21',
-  genreIds: [10765, 18, 10759],
+  genreIds: const [10765, 18, 10759],
   id: 94997,
   name: 'House of the Dragon',
-  originCountry: ["US"],
+  originCountry: const ["US"],
   originalLanguage: 'en',
   originalName: 'House of the Dragon',
   overview:
@@ -23,7 +23,7 @@ final testTv = Tv(
 
 final testTvList = [testTv];
 
-final testTvDetail = TvDetail(
+const testTvDetail = TvDetail(
   id: 1,
   backdropPath: 'backdropPath',
   name: 'name',
@@ -43,7 +43,7 @@ final testWatchlistTv = Tv.watchlist(
   name: 'name',
 );
 
-final testTvTable = TvTable(
+const testTvTable = TvTable(
   id: 1,
   name: 'name',
   posterPath: 'posterPath',

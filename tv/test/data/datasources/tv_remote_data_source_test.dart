@@ -112,7 +112,7 @@ void main() {
   });
 
   group('get Tv detail', () {
-    final tId = 1;
+    const tId = 1;
     final tTvDetail = TvDetailResponse.fromJson(
         json.decode(readJson('dummy_data/tv_detail.json')));
 
@@ -143,7 +143,7 @@ void main() {
     final tTvList = TvResponse.fromJson(
             json.decode(readJson('dummy_data/tv_recommendations.json')))
         .tvList;
-    final tId = 1;
+    const tId = 1;
 
     test('should return list of Tv Model when the response code is 200',
         () async {
@@ -175,7 +175,7 @@ void main() {
     final tSearchResult = TvResponse.fromJson(
             json.decode(readJson('dummy_data/search_dragon_tv.json')))
         .tvList;
-    final tQuery = 'Dragon';
+    const tQuery = 'Dragon';
 
     test('should return list of tv when response code is 200', () async {
       // arrange

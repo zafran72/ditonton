@@ -3,7 +3,7 @@ import 'package:tv/data/models/tv_model.dart';
 import 'package:tv/domain/entities/tv.dart';
 
 void main() {
-  final tTvModel = TvModel(
+  const tTvModel = TvModel(
     backdropPath: 'backdropPath',
     firstAirDate: 'firstAirDate',
     genreIds: [1, 2, 3],
@@ -22,10 +22,10 @@ void main() {
   final tTv = Tv(
     backdropPath: 'backdropPath',
     firstAirDate: 'firstAirDate',
-    genreIds: [1, 2, 3],
+    genreIds: const [1, 2, 3],
     id: 1,
     name: 'name',
-    originCountry: ['en'],
+    originCountry: const ['en'],
     originalLanguage: 'originalLanguage',
     originalName: 'originalName',
     overview: 'overview',

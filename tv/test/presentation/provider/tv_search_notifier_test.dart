@@ -28,10 +28,10 @@ void main() {
   final tTvModel = Tv(
     backdropPath: '/etj8E2o0Bud0HkONVQPjyCkIvpv.jpg',
     firstAirDate: '2022-08-21',
-    genreIds: [10765, 18, 10759],
+    genreIds: const [10765, 18, 10759],
     id: 94997,
     name: 'House of the Dragon',
-    originCountry: ["US"],
+    originCountry: const ["US"],
     originalLanguage: 'en',
     originalName: 'House of the Dragon',
     overview:
@@ -42,7 +42,7 @@ void main() {
     voteCount: 1564,
   );
   final tTvList = <Tv>[tTvModel];
-  final tQuery = 'dragon';
+  const tQuery = 'dragon';
   group('search movies', () {
     test('should change state to loading when usecase is called', () async {
       // arrange
@@ -70,7 +70,7 @@ void main() {
     test('should return error when data is unsuccessful', () async {
       // arrange
       when(mockSearchTv.execute(tQuery))
-          .thenAnswer((_) async => Left(ServerFailure('Server Failure')));
+          .thenAnswer((_) async => const Left(ServerFailure('Server Failure')));
       // act
       await provider.fetchTvSearch(tQuery);
       // assert
