@@ -1,0 +1,445 @@
+import 'package:bloc_test/bloc_test.dart';
+import 'package:core/core.dart';
+import 'package:core/domain/entities/genre.dart';
+import 'package:dartz/dartz.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:mockito/annotations.dart';
+import 'package:mockito/mockito.dart';
+import 'package:movie/domain/entities/movie.dart';
+import 'package:movie/domain/entities/movie_detail.dart';
+import 'package:movie/domain/usecases/get_movie_detail.dart';
+import 'package:movie/domain/usecases/get_movie_recommendations.dart';
+import 'package:movie/domain/usecases/get_now_playing_movies.dart';
+import 'package:movie/domain/usecases/get_popular_movies.dart';
+import 'package:movie/domain/usecases/get_top_rated_movies.dart';
+import 'package:movie/domain/usecases/get_watchlist_movies.dart';
+import 'package:movie/domain/usecases/get_watchlist_status.dart';
+import 'package:movie/domain/usecases/remove_watchlist.dart';
+import 'package:movie/domain/usecases/save_watchlist.dart';
+import 'package:movie/presentation/bloc/movie/movie_bloc.dart';
+
+import 'movie_bloc_test.mocks.dart';
+
+@GenerateMocks([
+  GetNowPlayingMovies,
+  GetPopularMovies,
+  GetTopRatedMovies,
+  GetMovieDetail,
+  GetMovieRecommendations,
+  GetWatchlistMovies,
+  GetWatchListStatus,
+  RemoveWatchlist,
+  SaveWatchlist,
+])
+void main() {
+  late MockGetNowPlayingMovies mockGetNowPlayingMovies;
+  late MockGetPopularMovies mockGetPopularMovies;
+  late MockGetTopRatedMovies mockGetTopRatedMovies;
+  late MockGetMovieDetail mockGetMovieDetail;
+  late MockGetMovieRecommendations mockGetMovieRecommendations;
+  late MockGetWatchlistMovies mockGetWatchlistMovies;
+  late MockGetWatchListStatus mockGetWatchListStatus;
+  late MockRemoveWatchlist mockRemoveWatchlist;
+  late MockSaveWatchlist mockSaveWatchlist;
+
+  late NowPlayingMoviesBloc nowPlayingMoviesBloc;
+  late PopularMoviesBloc popularMoviesBloc;
+  late TopRatedMoviesBloc topRatedMoviesBloc;
+  late MovieDetailBloc detailMovieBloc;
+  late RecommendationMovieBloc recommendationMovieBloc;
+  late WatchListBloc watchListBloc;
+
+  setUp(() {
+    mockGetNowPlayingMovies = MockGetNowPlayingMovies();
+    mockGetNowPlayingMovies = MockGetNowPlayingMovies();
+    mockGetPopularMovies = MockGetPopularMovies();
+    mockGetTopRatedMovies = MockGetTopRatedMovies();
+    mockGetMovieDetail = MockGetMovieDetail();
+    mockGetMovieRecommendations = MockGetMovieRecommendations();
+    mockGetWatchlistMovies = MockGetWatchlistMovies();
+    mockGetWatchListStatus = MockGetWatchListStatus();
+    mockRemoveWatchlist = MockRemoveWatchlist();
+    mockSaveWatchlist = MockSaveWatchlist();
+
+    nowPlayingMoviesBloc = NowPlayingMoviesBloc(mockGetNowPlayingMovies);
+    popularMoviesBloc = PopularMoviesBloc(mockGetPopularMovies);
+    topRatedMoviesBloc = TopRatedMoviesBloc(mockGetTopRatedMovies);
+    recommendationMovieBloc =
+        RecommendationMovieBloc(mockGetMovieRecommendations);
+    detailMovieBloc = MovieDetailBloc(mockGetMovieDetail);
+    watchListBloc = WatchListBloc(mockGetWatchlistMovies,
+        mockGetWatchListStatus, mockSaveWatchlist, mockRemoveWatchlist);
+  });
+
+  final tMovie = Movie(
+    adult: false,
+    backdropPath: '/muth4OYamXf41G2evdrLEg8d3om.jpg',
+    genreIds: const [14, 28],
+    id: 557,
+    originalTitle: 'Spider-Man',
+    overview:
+        'After being bitten by a genetically altered spider, nerdy high school student Peter Parker is endowed with amazing powers to become the Amazing superhero known as Spider-Man.',
+    popularity: 60.441,
+    posterPath: '/rweIrveL43TaxUN0akQEaAXL6x0.jpg',
+    releaseDate: '2002-05-01',
+    title: 'Spider-Man',
+    video: false,
+    voteAverage: 7.2,
+    voteCount: 13507,
+  );
+
+  final tMovieList = <Movie>[tMovie];
+
+  const tMovieDetail = MovieDetail(
+    adult: false,
+    backdropPath: 'backdropPath',
+    id: 1,
+    originalTitle: 'originalTitle',
+    overview: 'overview',
+    posterPath: 'posterPath',
+    releaseDate: 'releaseDate',
+    runtime: 120,
+    title: 'title',
+    voteAverage: 1,
+    voteCount: 1,
+    genres: [Genre(id: 1, name: 'name')],
+  );
+
+  const tId = 1;
+
+  group('Get now playing movies', () {
+    test('initial state must be empty', () {
+      expect(nowPlayingMoviesBloc.state, MoviesLoading());
+    });
+
+    blocTest(
+      'should emit[loading, movieHasData] when data is gotten succesfully',
+      build: () {
+        when(mockGetNowPlayingMovies.execute())
+            .thenAnswer((_) async => Right(tMovieList));
+        return nowPlayingMoviesBloc;
+      },
+      act: (NowPlayingMoviesBloc bloc) => bloc.add(FetchNowPlayingMovies()),
+      wait: const Duration(milliseconds: 500),
+      expect: () => [MoviesLoading(), MoviesHasData(tMovieList)],
+    );
+
+    blocTest(
+      'Should emit [Loading, Error] when get search is unsuccessful',
+      build: () {
+        when(mockGetNowPlayingMovies.execute()).thenAnswer(
+            (realInvocation) async =>
+                const Left(ServerFailure('Server Failure')));
+        return nowPlayingMoviesBloc;
+      },
+      act: (NowPlayingMoviesBloc bloc) => bloc.add(FetchNowPlayingMovies()),
+      wait: const Duration(milliseconds: 500),
+      expect: () => [
+        MoviesLoading(),
+        const MoviesHasError('Server Failure'),
+      ],
+      verify: (NowPlayingMoviesBloc bloc) =>
+          verify(mockGetNowPlayingMovies.execute()),
+    );
+  });
+
+  group('Get Popular movies', () {
+    test('initial state must be empty', () {
+      expect(popularMoviesBloc.state, MoviesLoading());
+    });
+
+    blocTest(
+      'should emit[loading, movieHasData] when data is gotten succesfully',
+      build: () {
+        when(mockGetPopularMovies.execute())
+            .thenAnswer((_) async => Right(tMovieList));
+        return popularMoviesBloc;
+      },
+      act: (PopularMoviesBloc bloc) => bloc.add(FetchPopularMovies()),
+      wait: const Duration(milliseconds: 500),
+      expect: () => [MoviesLoading(), MoviesHasData(tMovieList)],
+    );
+
+    blocTest(
+      'Should emit [Loading, Error] when get search is unsuccessful',
+      build: () {
+        when(mockGetPopularMovies.execute()).thenAnswer(
+            (realInvocation) async =>
+                const Left(ServerFailure('Server Failure')));
+        return popularMoviesBloc;
+      },
+      act: (PopularMoviesBloc bloc) => bloc.add(FetchPopularMovies()),
+      wait: const Duration(milliseconds: 500),
+      expect: () => [
+        MoviesLoading(),
+        const MoviesHasError('Server Failure'),
+      ],
+      verify: (bloc) => verify(mockGetPopularMovies.execute()),
+    );
+  });
+
+  group('Get Top Rated movies', () {
+    test('initial state must be empty', () {
+      expect(topRatedMoviesBloc.state, MoviesLoading());
+    });
+
+    blocTest(
+      'should emit[loading, movieHasData] when data is gotten succesfully',
+      build: () {
+        when(mockGetTopRatedMovies.execute())
+            .thenAnswer((_) async => Right(tMovieList));
+        return topRatedMoviesBloc;
+      },
+      act: (TopRatedMoviesBloc bloc) => bloc.add(FetchTopRatedMovies()),
+      wait: const Duration(milliseconds: 500),
+      expect: () => [MoviesLoading(), MoviesHasData(tMovieList)],
+    );
+
+    blocTest(
+      'Should emit [Loading, Error] when get search is unsuccessful',
+      build: () {
+        when(mockGetTopRatedMovies.execute()).thenAnswer(
+            (realInvocation) async =>
+                const Left(ServerFailure('Server Failure')));
+        return topRatedMoviesBloc;
+      },
+      act: (TopRatedMoviesBloc bloc) => bloc.add(FetchTopRatedMovies()),
+      wait: const Duration(milliseconds: 500),
+      expect: () => [
+        MoviesLoading(),
+        const MoviesHasError('Server Failure'),
+      ],
+      verify: (bloc) => verify(mockGetTopRatedMovies.execute()),
+    );
+  });
+
+  group('Get Recommended movies', () {
+    test('initial state must be empty', () {
+      expect(recommendationMovieBloc.state, MoviesLoading());
+    });
+
+    blocTest(
+      'should emit[loading, movieHasData] when data is gotten succesfully',
+      build: () {
+        when(mockGetMovieRecommendations.execute(tId))
+            .thenAnswer((_) async => Right(tMovieList));
+        return recommendationMovieBloc;
+      },
+      act: (RecommendationMovieBloc bloc) =>
+          bloc.add(const FetchMovieRecommendations(tId)),
+      wait: const Duration(milliseconds: 500),
+      expect: () => [MoviesLoading(), MoviesHasData(tMovieList)],
+    );
+
+    blocTest(
+      'Should emit [Loading, Error] when get search is unsuccessful',
+      build: () {
+        when(mockGetMovieRecommendations.execute(tId)).thenAnswer(
+            (realInvocation) async =>
+                const Left(ServerFailure('Server Failure')));
+        return recommendationMovieBloc;
+      },
+      act: (RecommendationMovieBloc bloc) =>
+          bloc.add(const FetchMovieRecommendations(tId)),
+      wait: const Duration(milliseconds: 500),
+      expect: () => [
+        MoviesLoading(),
+        const MoviesHasError('Server Failure'),
+      ],
+      verify: (bloc) => verify(mockGetMovieRecommendations.execute(tId)),
+    );
+  });
+
+  group('Get Details movies', () {
+    test('initial state must be empty', () {
+      expect(detailMovieBloc.state, MoviesLoading());
+    });
+
+    blocTest(
+      'should emit[loading, movieHasData] when data is gotten succesfully',
+      build: () {
+        when(mockGetMovieDetail.execute(tId))
+            .thenAnswer((_) async => const Right(tMovieDetail));
+        return detailMovieBloc;
+      },
+      act: (MovieDetailBloc bloc) => bloc.add(const FetchMovieDetail(tId)),
+      wait: const Duration(milliseconds: 500),
+      expect: () => [MoviesLoading(), const MovieDetailHasData(tMovieDetail)],
+    );
+
+    blocTest(
+      'Should emit [Loading, Error] when get search is unsuccessful',
+      build: () {
+        when(mockGetMovieDetail.execute(tId)).thenAnswer(
+            (realInvocation) async =>
+                const Left(ServerFailure('Server Failure')));
+        return detailMovieBloc;
+      },
+      act: (MovieDetailBloc bloc) => bloc.add(const FetchMovieDetail(tId)),
+      wait: const Duration(milliseconds: 500),
+      expect: () => [
+        MoviesLoading(),
+        const MoviesHasError('Server Failure'),
+      ],
+      verify: (bloc) => verify(mockGetMovieDetail.execute(tId)),
+    );
+  });
+
+  group('Get Watchlist movies', () {
+    test('initial state must be empty', () {
+      expect(watchListBloc.state, MoviesEmpty());
+    });
+
+    group('Watchlist Movie', () {
+      test('initial state should be empty', () {
+        expect(watchListBloc.state, MoviesEmpty());
+      });
+
+      group('Fetch Watchlist Movie', () {
+        blocTest(
+          'Should emit [Loading, HasData] when data is gotten successfully',
+          build: () {
+            when(mockGetWatchlistMovies.execute())
+                .thenAnswer((_) async => Right(tMovieList));
+            return watchListBloc;
+          },
+          act: (WatchListBloc bloc) => bloc.add(FetchWatchlistMovies()),
+          wait: const Duration(milliseconds: 500),
+          expect: () => [
+            MoviesLoading(),
+            WatchlistMovieHasData(tMovieList),
+          ],
+          verify: (bloc) => verify(mockGetWatchlistMovies.execute()),
+        );
+
+        blocTest(
+          'Should emit [Loading, Error] when get search is unsuccessful',
+          build: () {
+            when(mockGetWatchlistMovies.execute()).thenAnswer(
+                (_) async => const Left(ServerFailure('Server Failure')));
+            return watchListBloc;
+          },
+          act: (WatchListBloc bloc) => bloc.add(FetchWatchlistMovies()),
+          wait: const Duration(milliseconds: 500),
+          expect: () => [
+            MoviesLoading(),
+            const MoviesHasError('Server Failure'),
+          ],
+          verify: (bloc) => verify(mockGetWatchlistMovies.execute()),
+        );
+      });
+
+      group('Load Watchlist Movie', () {
+        blocTest(
+          'Should emit [Loading, HasData] when data is gotten successfully',
+          build: () {
+            when(mockGetWatchListStatus.execute(tId))
+                .thenAnswer((_) async => true);
+            return watchListBloc;
+          },
+          act: (WatchListBloc bloc) =>
+              bloc.add(const LoadWatchlistMovieStatus(tId)),
+          wait: const Duration(milliseconds: 500),
+          expect: () => [
+            MoviesLoading(),
+            const LoadWatchlistData(true),
+          ],
+          verify: (bloc) => verify(mockGetWatchListStatus.execute(tId)),
+        );
+
+        blocTest(
+          'Should emit [Loading, Error] when get search is unsuccessful',
+          build: () {
+            when(mockGetWatchListStatus.execute(tId))
+                .thenAnswer((_) async => false);
+            return watchListBloc;
+          },
+          act: (WatchListBloc bloc) =>
+              bloc.add(const LoadWatchlistMovieStatus(tId)),
+          wait: const Duration(milliseconds: 500),
+          expect: () => [
+            MoviesLoading(),
+            const LoadWatchlistData(false),
+          ],
+          verify: (bloc) => verify(mockGetWatchListStatus.execute(tId)),
+        );
+      });
+
+      group('Save Watchlist Movie', () {
+        blocTest(
+          'Should emit [Loading, HasData] when data is gotten successfully',
+          build: () {
+            when(mockSaveWatchlist.execute(tMovieDetail)).thenAnswer(
+                (_) async =>
+                    const Right(WatchListBloc.watchlistAddSuccessMessage));
+            return watchListBloc;
+          },
+          act: (WatchListBloc bloc) =>
+              bloc.add(const AddWatchlistMovies(tMovieDetail)),
+          wait: const Duration(milliseconds: 500),
+          expect: () => [
+            MoviesLoading(),
+            const WatchlistMoviesMessage(
+                WatchListBloc.watchlistAddSuccessMessage),
+          ],
+          verify: (bloc) => verify(mockSaveWatchlist.execute(tMovieDetail)),
+        );
+
+        blocTest(
+          'Should emit [Loading, Error] when get search is unsuccessful',
+          build: () {
+            when(mockSaveWatchlist.execute(tMovieDetail)).thenAnswer(
+                (_) async => const Left(ServerFailure('Server Failure')));
+            return watchListBloc;
+          },
+          act: (WatchListBloc bloc) =>
+              bloc.add(const AddWatchlistMovies(tMovieDetail)),
+          wait: const Duration(milliseconds: 500),
+          expect: () => [
+            MoviesLoading(),
+            const MoviesHasError('Server Failure'),
+          ],
+          verify: (bloc) => verify(mockSaveWatchlist.execute(tMovieDetail)),
+        );
+      });
+
+      group('Remove Watchlist Movie', () {
+        blocTest(
+          'Should emit [Loading, HasData] when data is gotten successfully',
+          build: () {
+            when(mockRemoveWatchlist.execute(tMovieDetail)).thenAnswer(
+                (_) async =>
+                    const Right(WatchListBloc.watchlistAddSuccessMessage));
+            return watchListBloc;
+          },
+          act: (WatchListBloc bloc) =>
+              bloc.add(const RemoveWatchlistMovies(tMovieDetail)),
+          wait: const Duration(milliseconds: 500),
+          expect: () => [
+            MoviesLoading(),
+            const WatchlistMoviesMessage(
+                WatchListBloc.watchlistAddSuccessMessage),
+          ],
+          verify: (bloc) => verify(mockRemoveWatchlist.execute(tMovieDetail)),
+        );
+
+        blocTest(
+          'Should emit [Loading, Error] when get search is unsuccessful',
+          build: () {
+            when(mockRemoveWatchlist.execute(tMovieDetail)).thenAnswer(
+                (_) async => const Left(ServerFailure('Server Failure')));
+            return watchListBloc;
+          },
+          act: (WatchListBloc bloc) =>
+              bloc.add(const RemoveWatchlistMovies(tMovieDetail)),
+          wait: const Duration(milliseconds: 500),
+          expect: () => [
+            MoviesLoading(),
+            const MoviesHasError('Server Failure'),
+          ],
+          verify: (bloc) => verify(mockRemoveWatchlist.execute(tMovieDetail)),
+        );
+      });
+    });
+  });
+}

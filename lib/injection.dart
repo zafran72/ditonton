@@ -1,5 +1,5 @@
 import 'package:movie/data/datasources/db/database_helper.dart';
-import 'package:movie/presentation/bloc/movie_search_bloc.dart';
+import 'package:movie/presentation/bloc/search/movie_search_bloc.dart';
 import 'package:tv/data/datasources/db/tv_database_helper.dart';
 import 'package:movie/data/datasources/movie_local_data_source.dart';
 import 'package:movie/data/datasources/movie_remote_data_source.dart';
