@@ -1,9 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:movie/domain/entities/movie.dart';
-
 import 'package:equatable/equatable.dart';
 import 'package:rxdart/rxdart.dart';
-
 import '../../domain/usecases/search_movies.dart';
 
 part 'movie_search_event.dart';

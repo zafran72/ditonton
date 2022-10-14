@@ -50,7 +50,7 @@ void main() {
         return tvSearchBloc;
       },
       act: (bloc) => bloc.add(const OnTvQueryChanged(tQuery)),
-      wait: const Duration(milliseconds: 100),
+      wait: const Duration(milliseconds: 500),
       expect: () => [
         TvSearchLoading(),
         TvSearchHasData(tTvList),
