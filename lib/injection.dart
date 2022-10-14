@@ -1,4 +1,5 @@
 import 'package:movie/data/datasources/db/database_helper.dart';
+import 'package:movie/presentation/bloc/movie_search_bloc.dart';
 import 'package:tv/data/datasources/db/tv_database_helper.dart';
 import 'package:movie/data/datasources/movie_local_data_source.dart';
 import 'package:movie/data/datasources/movie_remote_data_source.dart';
@@ -30,14 +31,13 @@ import 'package:tv/domain/usecases/tv_remove_watchlist.dart';
 import 'package:tv/domain/usecases/tv_save_watchlist.dart';
 import 'package:movie/presentation/provider/movie_detail_notifier.dart';
 import 'package:movie/presentation/provider/movie_list_notifier.dart';
-import 'package:movie/presentation/provider/movie_search_notifier.dart';
 import 'package:movie/presentation/provider/popular_movies_notifier.dart';
+import 'package:tv/presentation/bloc/tv_search_bloc.dart';
 import 'package:tv/presentation/provider/popular_tv_notifier.dart';
 import 'package:movie/presentation/provider/top_rated_movies_notifier.dart';
 import 'package:tv/presentation/provider/top_rated_tv_notifier.dart';
 import 'package:tv/presentation/provider/tv_detail_notifier.dart';
 import 'package:tv/presentation/provider/tv_list_notifier.dart';
-import 'package:tv/presentation/provider/tv_search_notifier.dart';
 import 'package:movie/presentation/provider/watchlist_movie_notifier.dart';
 import 'package:http/http.dart' as http;
 import 'package:get_it/get_it.dart';
@@ -64,8 +64,8 @@ void init() {
     ),
   );
   locator.registerFactory(
-    () => MovieSearchNotifier(
-      searchMovies: locator(),
+    () => MovieSearchBloc(
+      locator(),
     ),
   );
   locator.registerFactory(
@@ -115,8 +115,8 @@ void init() {
     ),
   );
   locator.registerFactory(
-    () => TvSearchNotifier(
-      searchTv: locator(),
+    () => TvSearchBloc(
+      locator(),
     ),
   );
 
