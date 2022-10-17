@@ -120,7 +120,7 @@ class RecommendationMovieBloc extends Bloc<MovieBlocEvent, MovieBlocState> {
   }
 }
 
-class WatchListMovieBloc extends Bloc<MovieBlocEvent, MovieBlocState> {
+class WatchlistMovieBloc extends Bloc<MovieBlocEvent, MovieBlocState> {
   final GetWatchlistMovies _getWatchlistMovies;
   final GetWatchListStatus _getWatchListStatus;
   final SaveWatchlist _saveWatchlist;
@@ -129,7 +129,7 @@ class WatchListMovieBloc extends Bloc<MovieBlocEvent, MovieBlocState> {
   static const watchlistAddSuccessMessage = 'Added to Watchlist';
   static const watchlistRemoveSuccessMessage = 'Removed from Watchlist';
 
-  WatchListMovieBloc(this._getWatchlistMovies, this._getWatchListStatus,
+  WatchlistMovieBloc(this._getWatchlistMovies, this._getWatchListStatus,
       this._saveWatchlist, this._removeWatchlist)
       : super(MoviesEmpty()) {
     on<FetchWatchlistMovies>((event, emit) async {

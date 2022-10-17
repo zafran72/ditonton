@@ -47,7 +47,7 @@ void main() {
   late TopRatedMoviesBloc topRatedMoviesBloc;
   late MovieDetailBloc detailMovieBloc;
   late RecommendationMovieBloc recommendationMovieBloc;
-  late WatchListMovieBloc watchListMovieBloc;
+  late WatchlistMovieBloc watchListMovieBloc;
 
   setUp(() {
     mockGetNowPlayingMovies = MockGetNowPlayingMovies();
@@ -67,7 +67,7 @@ void main() {
     recommendationMovieBloc =
         RecommendationMovieBloc(mockGetMovieRecommendations);
     detailMovieBloc = MovieDetailBloc(mockGetMovieDetail);
-    watchListMovieBloc = WatchListMovieBloc(mockGetWatchlistMovies,
+    watchListMovieBloc = WatchlistMovieBloc(mockGetWatchlistMovies,
         mockGetWatchListStatus, mockSaveWatchlist, mockRemoveWatchlist);
   });
 
@@ -323,14 +323,14 @@ void main() {
     });
 
     group('Fetch', () {
-      blocTest<WatchListMovieBloc, MovieBlocState>(
+      blocTest<WatchlistMovieBloc, MovieBlocState>(
         'Should emit [Loading, HasData] when data is gotten successfully',
         build: () {
           when(mockGetWatchlistMovies.execute())
               .thenAnswer((_) async => Right(tMovieList));
           return watchListMovieBloc;
         },
-        act: (WatchListMovieBloc bloc) => bloc.add(FetchWatchlistMovies()),
+        act: (WatchlistMovieBloc bloc) => bloc.add(FetchWatchlistMovies()),
         wait: const Duration(milliseconds: 500),
         expect: () => [
           MoviesLoading(),
@@ -341,14 +341,14 @@ void main() {
         },
       );
 
-      blocTest<WatchListMovieBloc, MovieBlocState>(
+      blocTest<WatchlistMovieBloc, MovieBlocState>(
         'Should emit [Loading, Error] when get data is unsuccessful',
         build: () {
           when(mockGetWatchlistMovies.execute()).thenAnswer(
               (_) async => const Left(ServerFailure('Server Failure')));
           return watchListMovieBloc;
         },
-        act: (WatchListMovieBloc bloc) => bloc.add(FetchWatchlistMovies()),
+        act: (WatchlistMovieBloc bloc) => bloc.add(FetchWatchlistMovies()),
         wait: const Duration(milliseconds: 500),
         expect: () => [
           MoviesLoading(),
@@ -361,14 +361,14 @@ void main() {
     });
 
     group('Load', () {
-      blocTest<WatchListMovieBloc, MovieBlocState>(
+      blocTest<WatchlistMovieBloc, MovieBlocState>(
         'Should emit [Loading, HasData] when data is gotten successfully',
         build: () {
           when(mockGetWatchListStatus.execute(tId))
               .thenAnswer((_) async => true);
           return watchListMovieBloc;
         },
-        act: (WatchListMovieBloc bloc) =>
+        act: (WatchlistMovieBloc bloc) =>
             bloc.add(const LoadWatchlistMovieStatus(tId)),
         wait: const Duration(milliseconds: 500),
         expect: () => [
@@ -380,14 +380,14 @@ void main() {
         },
       );
 
-      blocTest<WatchListMovieBloc, MovieBlocState>(
+      blocTest<WatchlistMovieBloc, MovieBlocState>(
         'Should emit [Loading, Error] when get data is unsuccessful',
         build: () {
           when(mockGetWatchListStatus.execute(tId))
               .thenAnswer((_) async => false);
           return watchListMovieBloc;
         },
-        act: (WatchListMovieBloc bloc) =>
+        act: (WatchlistMovieBloc bloc) =>
             bloc.add(const LoadWatchlistMovieStatus(tId)),
         wait: const Duration(milliseconds: 500),
         expect: () => [
@@ -401,34 +401,34 @@ void main() {
     });
 
     group('Add', () {
-      blocTest<WatchListMovieBloc, MovieBlocState>(
+      blocTest<WatchlistMovieBloc, MovieBlocState>(
         'Should emit [Loading, HasData] when data is gotten successfully',
         build: () {
           when(mockSaveWatchlist.execute(tMovieDetail)).thenAnswer((_) async =>
-              const Right(WatchListMovieBloc.watchlistAddSuccessMessage));
+              const Right(WatchlistMovieBloc.watchlistAddSuccessMessage));
           return watchListMovieBloc;
         },
-        act: (WatchListMovieBloc bloc) =>
+        act: (WatchlistMovieBloc bloc) =>
             bloc.add(const AddWatchlistMovies(tMovieDetail)),
         wait: const Duration(milliseconds: 500),
         expect: () => [
           MoviesLoading(),
           const WatchlistMoviesMessage(
-              WatchListMovieBloc.watchlistAddSuccessMessage),
+              WatchlistMovieBloc.watchlistAddSuccessMessage),
         ],
         verify: (bloc) {
           verify(mockSaveWatchlist.execute(tMovieDetail));
         },
       );
 
-      blocTest<WatchListMovieBloc, MovieBlocState>(
+      blocTest<WatchlistMovieBloc, MovieBlocState>(
         'Should emit [Loading, Error] when get data is unsuccessful',
         build: () {
           when(mockSaveWatchlist.execute(tMovieDetail)).thenAnswer(
               (_) async => const Left(ServerFailure('Server Failure')));
           return watchListMovieBloc;
         },
-        act: (WatchListMovieBloc bloc) =>
+        act: (WatchlistMovieBloc bloc) =>
             bloc.add(const AddWatchlistMovies(tMovieDetail)),
         wait: const Duration(milliseconds: 500),
         expect: () => [
@@ -442,35 +442,35 @@ void main() {
     });
 
     group('Remove', () {
-      blocTest<WatchListMovieBloc, MovieBlocState>(
+      blocTest<WatchlistMovieBloc, MovieBlocState>(
         'Should emit [Loading, HasData] when data is gotten successfully',
         build: () {
           when(mockRemoveWatchlist.execute(tMovieDetail)).thenAnswer(
               (_) async =>
-                  const Right(WatchListMovieBloc.watchlistAddSuccessMessage));
+                  const Right(WatchlistMovieBloc.watchlistAddSuccessMessage));
           return watchListMovieBloc;
         },
-        act: (WatchListMovieBloc bloc) =>
+        act: (WatchlistMovieBloc bloc) =>
             bloc.add(const RemoveWatchlistMovies(tMovieDetail)),
         wait: const Duration(milliseconds: 500),
         expect: () => [
           MoviesLoading(),
           const WatchlistMoviesMessage(
-              WatchListMovieBloc.watchlistAddSuccessMessage),
+              WatchlistMovieBloc.watchlistAddSuccessMessage),
         ],
         verify: (bloc) {
           verify(mockRemoveWatchlist.execute(tMovieDetail));
         },
       );
 
-      blocTest<WatchListMovieBloc, MovieBlocState>(
+      blocTest<WatchlistMovieBloc, MovieBlocState>(
         'Should emit [Loading, Error] when get data is unsuccessful',
         build: () {
           when(mockRemoveWatchlist.execute(tMovieDetail)).thenAnswer(
               (_) async => const Left(ServerFailure('Server Failure')));
           return watchListMovieBloc;
         },
-        act: (WatchListMovieBloc bloc) =>
+        act: (WatchlistMovieBloc bloc) =>
             bloc.add(const RemoveWatchlistMovies(tMovieDetail)),
         wait: const Duration(milliseconds: 500),
         expect: () => [

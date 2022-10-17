@@ -1,6 +1,8 @@
 // ignore_for_file: constant_identifier_names, library_private_types_in_public_api
 
 import 'package:core/core.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:movie/presentation/bloc/movie/movie_bloc.dart';
 import 'package:movie/presentation/provider/watchlist_movie_notifier.dart';
 import 'package:movie/presentation/widgets/movie_card_list.dart';
 import 'package:flutter/material.dart';
@@ -45,25 +47,27 @@ class _WatchlistMoviesPageState extends State<WatchlistMoviesPage>
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
-        child: Consumer<WatchlistMovieNotifier>(
-          builder: (context, data, child) {
-            if (data.watchlistState == RequestState.Loading) {
+        child: BlocBuilder<WatchlistMovieBloc, MovieBlocState>(
+          builder: (context, state) {
+            if (state is MoviesLoading) {
               return const Center(
                 child: CircularProgressIndicator(),
               );
-            } else if (data.watchlistState == RequestState.Loaded) {
+            } else if (state is WatchlistMovieHasData) {
               return ListView.builder(
                 itemBuilder: (context, index) {
-                  final movie = data.watchlistMovies[index];
+                  final movie = state.watchlistMovies[index];
                   return MovieCard(movie);
                 },
-                itemCount: data.watchlistMovies.length,
+                itemCount: state.watchlistMovies.length,
               );
-            } else {
+            } else if (state is MoviesHasError) {
               return Center(
                 key: const Key('error_message'),
-                child: Text(data.message),
+                child: Text(state.message),
               );
+            } else {
+              return const Text('No Watchlist');
             }
           },
         ),

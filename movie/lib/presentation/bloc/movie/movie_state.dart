@@ -39,12 +39,12 @@ class MovieDetailHasData extends MovieBlocState {
 }
 
 class WatchlistMovieHasData extends MovieBlocState {
-  final List<Movie> movies;
+  final List<Movie> watchlistMovies;
 
-  const WatchlistMovieHasData(this.movies);
+  const WatchlistMovieHasData(this.watchlistMovies);
 
   @override
-  List<Object> get props => [movies];
+  List<Object> get props => [watchlistMovies];
 }
 
 class WatchlistMoviesMessage extends MovieBlocState {
