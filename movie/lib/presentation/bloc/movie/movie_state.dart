@@ -7,9 +7,9 @@ abstract class MovieBlocState extends Equatable {
   List<Object> get props => [];
 }
 
-class MoviesLoading extends MovieBlocState {}
-
 class MoviesEmpty extends MovieBlocState {}
+
+class MoviesLoading extends MovieBlocState {}
 
 class MoviesHasData extends MovieBlocState {
   final List<Movie> movies;
