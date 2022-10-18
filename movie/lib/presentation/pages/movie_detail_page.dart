@@ -28,7 +28,9 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
     super.initState();
     Future.microtask(() {
       context.read<MovieDetailBloc>().add(FetchMovieDetail(widget.id));
-      context.read<MovieDetailBloc>().add(LoadWatchlistMovieStatus(widget.id));
+      context
+          .read<WatchlistMovieBloc>()
+          .add(LoadWatchlistMovieStatus(widget.id));
       context
           .read<RecommendationMovieBloc>()
           .add(FetchMovieRecommendations(widget.id));
@@ -46,7 +48,7 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
       return [];
     });
 
-    var isAddedToWatchlist = context.select<MovieDetailBloc, bool>((value) {
+    var isAddedToWatchlist = context.select<WatchlistMovieBloc, bool>((value) {
       var state = value.state;
       if (state is LoadWatchlistData) {
         return state.status;
@@ -135,38 +137,38 @@ class DetailContent extends StatelessWidget {
                               onPressed: () async {
                                 if (!isAddedWatchlist) {
                                   context
-                                      .read<MovieDetailBloc>()
+                                      .read<WatchlistMovieBloc>()
                                       .add(AddWatchlistMovies(movie));
                                 } else {
                                   context
-                                      .read<MovieDetailBloc>()
+                                      .read<WatchlistMovieBloc>()
                                       .add(RemoveWatchlistMovies(movie));
                                 }
 
                                 String message = '';
 
                                 final state =
-                                    BlocProvider.of<MovieDetailBloc>(context)
+                                    BlocProvider.of<WatchlistMovieBloc>(context)
                                         .state;
                                 if (state is LoadWatchlistData) {
                                   message = isAddedWatchlist
-                                      ? MovieDetailBloc
+                                      ? WatchlistMovieBloc
                                           .watchlistRemoveSuccessMessage
-                                      : MovieDetailBloc
+                                      : WatchlistMovieBloc
                                           .watchlistAddSuccessMessage;
                                 } else {
                                   message = isAddedWatchlist == false
-                                      ? MovieDetailBloc
+                                      ? WatchlistMovieBloc
                                           .watchlistAddSuccessMessage
-                                      : MovieDetailBloc
+                                      : WatchlistMovieBloc
                                           .watchlistRemoveSuccessMessage;
                                 }
 
                                 if (message ==
-                                        MovieDetailBloc
+                                        WatchlistMovieBloc
                                             .watchlistAddSuccessMessage ||
                                     message ==
-                                        MovieDetailBloc
+                                        WatchlistMovieBloc
                                             .watchlistRemoveSuccessMessage) {
                                   ScaffoldMessenger.of(context).showSnackBar(
                                       SnackBar(
@@ -176,7 +178,7 @@ class DetailContent extends StatelessWidget {
                                             message,
                                           )));
                                   //LOAD NEW STATUS
-                                  BlocProvider.of<MovieDetailBloc>(context)
+                                  BlocProvider.of<WatchlistMovieBloc>(context)
                                       .add(LoadWatchlistMovieStatus(movie.id));
                                 } else {
                                   showDialog(

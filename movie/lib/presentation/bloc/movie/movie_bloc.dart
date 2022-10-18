@@ -77,16 +77,8 @@ class TopRatedMoviesBloc extends Bloc<MovieBlocEvent, MovieBlocState> {
 
 class MovieDetailBloc extends Bloc<MovieBlocEvent, MovieBlocState> {
   final GetMovieDetail _getMovieDetail;
-  final GetWatchListStatus getWatchListStatus;
-  final SaveWatchlist saveWatchlist;
-  final RemoveWatchlist removeWatchlist;
 
-  static const watchlistAddSuccessMessage = 'Added to Watchlist';
-  static const watchlistRemoveSuccessMessage = 'Removed from Watchlist';
-
-  MovieDetailBloc(this._getMovieDetail, this.getWatchListStatus,
-      this.saveWatchlist, this.removeWatchlist)
-      : super(MoviesEmpty()) {
+  MovieDetailBloc(this._getMovieDetail) : super(MoviesEmpty()) {
     on<FetchMovieDetail>((event, emit) async {
       final id = event.id;
 
@@ -99,6 +91,57 @@ class MovieDetailBloc extends Bloc<MovieBlocEvent, MovieBlocState> {
         },
         (movies) {
           emit(MovieDetailHasData(movies));
+        },
+      );
+    });
+  }
+}
+
+class RecommendationMovieBloc extends Bloc<MovieBlocEvent, MovieBlocState> {
+  final GetMovieRecommendations _getMovieRecommendations;
+
+  RecommendationMovieBloc(this._getMovieRecommendations)
+      : super(MoviesEmpty()) {
+    on<FetchMovieRecommendations>((event, emit) async {
+      final int id = event.id;
+
+      emit(MoviesLoading());
+      final result = await _getMovieRecommendations.execute(id);
+
+      result.fold(
+        (failure) {
+          emit(MoviesHasError(failure.message));
+        },
+        (moviesData) {
+          emit(MoviesHasData(moviesData));
+        },
+      );
+    });
+  }
+}
+
+class WatchlistMovieBloc extends Bloc<MovieBlocEvent, MovieBlocState> {
+  final GetWatchlistMovies getWatchlistMovies;
+  final GetWatchListStatus getWatchListStatus;
+  final SaveWatchlist saveWatchlist;
+  final RemoveWatchlist removeWatchlist;
+
+  static const watchlistAddSuccessMessage = 'Added to Watchlist';
+  static const watchlistRemoveSuccessMessage = 'Removed from Watchlist';
+
+  WatchlistMovieBloc(this.getWatchlistMovies, this.getWatchListStatus,
+      this.saveWatchlist, this.removeWatchlist)
+      : super(MoviesEmpty()) {
+    on<FetchWatchlistMovies>((event, emit) async {
+      emit(MoviesLoading());
+      final result = await getWatchlistMovies.execute();
+
+      result.fold(
+        (failure) {
+          emit(MoviesHasError(failure.message));
+        },
+        (moviesData) {
+          emit(WatchlistMovieHasData(moviesData));
         },
       );
     });
@@ -144,49 +187,6 @@ class MovieDetailBloc extends Bloc<MovieBlocEvent, MovieBlocState> {
       final result = await getWatchListStatus.execute(id);
 
       emit(LoadWatchlistData(result));
-    });
-  }
-}
-
-class RecommendationMovieBloc extends Bloc<MovieBlocEvent, MovieBlocState> {
-  final GetMovieRecommendations _getMovieRecommendations;
-
-  RecommendationMovieBloc(this._getMovieRecommendations)
-      : super(MoviesEmpty()) {
-    on<FetchMovieRecommendations>((event, emit) async {
-      final int id = event.id;
-
-      emit(MoviesLoading());
-      final result = await _getMovieRecommendations.execute(id);
-
-      result.fold(
-        (failure) {
-          emit(MoviesHasError(failure.message));
-        },
-        (moviesData) {
-          emit(MoviesHasData(moviesData));
-        },
-      );
-    });
-  }
-}
-
-class WatchlistMovieBloc extends Bloc<MovieBlocEvent, MovieBlocState> {
-  final GetWatchlistMovies getWatchlistMovies;
-
-  WatchlistMovieBloc(this.getWatchlistMovies) : super(MoviesEmpty()) {
-    on<FetchWatchlistMovies>((event, emit) async {
-      emit(MoviesLoading());
-      final result = await getWatchlistMovies.execute();
-
-      result.fold(
-        (failure) {
-          emit(MoviesHasError(failure.message));
-        },
-        (moviesData) {
-          emit(WatchlistMovieHasData(moviesData));
-        },
-      );
     });
   }
 }
