@@ -18,7 +18,9 @@ class TvSearchBloc extends Bloc<TvSearchEvent, TvSearchState> {
       final result = await _searchTv.execute(query);
 
       result.fold(
-        (failure) {},
+        (failure) {
+          emit(TvSearchError(failure.message));
+        },
         (data) {
           emit(TvSearchHasData(data));
         },

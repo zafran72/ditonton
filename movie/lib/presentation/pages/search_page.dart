@@ -2,7 +2,7 @@
 
 import 'package:core/core.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:movie/presentation/bloc/movie_search_bloc.dart';
+import 'package:movie/presentation/bloc/search/movie_search_bloc.dart';
 import 'package:movie/presentation/widgets/movie_card_list.dart';
 import 'package:flutter/material.dart';
 
