@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:core/core.dart';
-import 'package:tv/presentation/provider/watchlist_tv_notifier.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:tv/presentation/bloc/tv/bloc/tv_bloc.dart';
 import 'package:tv/presentation/widgets/tv_card_list.dart';
-import 'package:provider/provider.dart';
 
 class WatchlistTvPage extends StatefulWidget {
   static const routeName = '/watchlist-tv';
@@ -18,8 +18,7 @@ class _WatchlistTvPageState extends State<WatchlistTvPage> with RouteAware {
   void initState() {
     super.initState();
     Future.microtask(() {
-      Provider.of<WatchListTvNotifier>(context, listen: false)
-          .fetchWatchlistTv();
+      context.read<WatchlistTvBloc>().add(FetchWatchlistTv());
     });
   }
 
@@ -31,7 +30,7 @@ class _WatchlistTvPageState extends State<WatchlistTvPage> with RouteAware {
 
   @override
   void didPopNext() {
-    Provider.of<WatchListTvNotifier>(context, listen: false).fetchWatchlistTv();
+    context.read<WatchlistTvBloc>().add(FetchWatchlistTv());
   }
 
   @override
@@ -42,24 +41,28 @@ class _WatchlistTvPageState extends State<WatchlistTvPage> with RouteAware {
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
-        child: Consumer<WatchListTvNotifier>(
-          builder: (context, data, child) {
-            if (data.watchlistState == RequestState.Loading) {
+        child: BlocBuilder<WatchlistTvBloc, TvState>(
+          builder: (context, state) {
+            if (state is TvLoading) {
               return const Center(
                 child: CircularProgressIndicator(),
               );
-            } else if (data.watchlistState == RequestState.Loaded) {
+            } else if (state is WatchlistTvHasData) {
               return ListView.builder(
                 itemBuilder: (context, index) {
-                  final tv = data.watchlistTv[index];
+                  final tv = state.watchlistTv[index];
                   return TvCard(tv);
                 },
-                itemCount: data.watchlistTv.length,
+                itemCount: state.watchlistTv.length,
               );
-            } else {
+            } else if (state is TvHasError) {
               return Center(
                 key: const Key('error_message'),
-                child: Text(data.message),
+                child: Text(state.message),
+              );
+            } else {
+              return const Center(
+                child: Text('No Watchlist'),
               );
             }
           },

@@ -5,9 +5,9 @@ import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:tv/domain/entities/tv.dart';
 import 'package:tv/domain/usecases/search_tv.dart';
-import 'package:tv/presentation/bloc/tv_search_bloc.dart';
+import 'package:tv/presentation/bloc/search/tv_search_bloc.dart';
 
-import '../provider/tv_search_notifier_test.mocks.dart';
+import '../../provider/tv_search_notifier_test.mocks.dart';
 
 @GenerateMocks([SearchTv])
 void main() {
