@@ -1,3 +1,4 @@
+import 'package:core/data/security/ssl_pinning.dart';
 import 'package:movie/data/datasources/db/database_helper.dart';
 import 'package:movie/presentation/bloc/movie/movie_bloc.dart';
 import 'package:movie/presentation/bloc/search/movie_search_bloc.dart';
@@ -32,12 +33,11 @@ import 'package:tv/domain/usecases/tv_remove_watchlist.dart';
 import 'package:tv/domain/usecases/tv_save_watchlist.dart';
 import 'package:tv/presentation/bloc/search/tv_search_bloc.dart';
 import 'package:tv/presentation/bloc/tv/bloc/tv_bloc.dart';
-import 'package:http/http.dart' as http;
 import 'package:get_it/get_it.dart';
 
 final locator = GetIt.instance;
 
-void init() {
+void init() async {
   // provider
   locator.registerFactory(
     () => NowPlayingMoviesBloc(
@@ -168,5 +168,5 @@ void init() {
   locator.registerLazySingleton<TvDatabaseHelper>(() => TvDatabaseHelper());
 
   // external
-  locator.registerLazySingleton(() => http.Client());
+  locator.registerLazySingleton(() => SslPinning.client);
 }

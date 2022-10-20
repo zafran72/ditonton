@@ -1,10 +1,10 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:http/io_client.dart';
 import 'package:tv/data/datasources/db/tv_database_helper.dart';
 import 'package:tv/data/datasources/tv_local_data_source.dart';
 import 'package:tv/data/datasources/tv_remote_data_source.dart';
 import 'package:mockito/annotations.dart';
-import 'package:http/http.dart' as http;
 import 'package:tv/domain/repositories/tv_repository.dart';
 import 'package:tv/presentation/bloc/tv/bloc/tv_bloc.dart';
 
@@ -14,7 +14,7 @@ import 'package:tv/presentation/bloc/tv/bloc/tv_bloc.dart';
   TvLocalDataSource,
   TvDatabaseHelper,
 ], customMocks: [
-  MockSpec<http.Client>(as: #MockHttpClient)
+  MockSpec<IOClient>(as: #MockHttpClient)
 ])
 void main() {}
 
