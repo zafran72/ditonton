@@ -2,11 +2,11 @@
 
 import 'dart:convert';
 
+import 'package:http/io_client.dart';
 import 'package:tv/data/models/tv_detail_model.dart';
 import 'package:tv/data/models/tv_model.dart';
 import 'package:tv/data/models/tv_response.dart';
 import 'package:core/utils/exception.dart';
-import 'package:http/http.dart' as http;
 
 abstract class TvRemoteDataSource {
   Future<List<TvModel>> getNowPlayingTv();
@@ -21,7 +21,7 @@ class TvRemoteDataSourceImpl implements TvRemoteDataSource {
   static const apiKey = 'api_key=2174d146bb9c0eab47529b2e77d6b526';
   static const baseUrl = 'https://api.themoviedb.org/3';
 
-  final http.Client client;
+  final IOClient client;
 
   TvRemoteDataSourceImpl({required this.client});
 
