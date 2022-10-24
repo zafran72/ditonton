@@ -1,6 +1,7 @@
 import 'package:core/core.dart';
 import 'package:core/data/security/ssl_pinning.dart';
 import 'package:ditonton/firebase_options.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:core/presentation/pages/about_page.dart';
 import 'package:core/presentation/pages/home_page.dart';
@@ -30,6 +31,7 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  await FirebaseAnalytics.instance.logAppOpen();
   di.init();
   runApp(MyApp());
 }
